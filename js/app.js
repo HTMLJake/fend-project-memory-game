@@ -2,7 +2,6 @@
  * Create a list that holds all of your cards
  */
 
-
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -26,7 +25,7 @@ function shuffle(array) {
 }
 
 
-/*
+/* TODO
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
  *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
@@ -36,3 +35,16 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+ //Card Event Listener
+$('.card').click(function (e) { 
+    e.preventDefault();
+    flipCard(this);
+});
+
+//Shakes card and shows image
+function flipCard(card) {
+    $(card).effect("bounce");
+    $(card).addClass('open show');
+}
+
