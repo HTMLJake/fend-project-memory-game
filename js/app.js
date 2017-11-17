@@ -1,5 +1,9 @@
 /* Card List */
 let cards = [];
+let flippedCardsArr = [];
+let moveIndex = 0;
+
+
 $('.deck .card').each(function () {
     cards.push(this);
 });
@@ -25,8 +29,6 @@ function shuffle(array) {
  *  + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-let flippedCardsArr = [];
-
  //Card Event Listener
 $('.card').click(function () { 
     showCard(this);
@@ -50,6 +52,12 @@ function matchTest(cardsArr) {
             });
         });
     }
+
+    updateMoveIndex(++moveIndex);
+}
+
+function updateMoveIndex(num) {
+    $('.moves').text(num);
 }
 
 //Sets cards to the hold class if matched
@@ -94,6 +102,7 @@ $('.restart').click(function () {
 });
 
 function Restart() {
+    updateMoveIndex(0);
     let classArr = cards.map(x => $(x).find("i").attr("class"));
     
     shuffle(classArr);
