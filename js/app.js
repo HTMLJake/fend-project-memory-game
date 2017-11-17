@@ -1,7 +1,10 @@
-/*
- * Create a list that holds all of your cards
- */
+/* Card List */
+let cards = [];
+$('.deck .card').each(function (e) {
+    cards.push(this);
+});
 
+console.log(cards);
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -39,12 +42,37 @@ function shuffle(array) {
  //Card Event Listener
 $('.card').click(function (e) { 
     e.preventDefault();
-    flipCard(this);
+    showCard(this);
 });
 
 //Shakes card and shows image
-function flipCard(card) {
-    $(card).effect("bounce");
-    $(card).addClass('open show');
+function showCard(card) {
+    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
+        $(card).addClass('open show');
+        $(card).toggle("clip", {direction: "horizontal"}, 100);
+    });
+
+    //TODO: Add to array of flipped cards
 }
 
+function hideCard(card) {
+    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
+        $(card).removeClass('open show');
+        $(card).toggle("clip", {direction: "horizontal"}, 100);
+    });
+
+    //TODO: Clear array of flipped cards
+}
+
+/* Restart Game when Restart Button Pressed */
+$('.restart').click(function (e) {
+    let classArr = cards.map(x => $(x).find("i").attr("class"));
+
+    shuffle(classArr);
+
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        $(card).attr("class", "card");
+        $(card).find('i').attr("class", classArr[i]);
+    }
+});
