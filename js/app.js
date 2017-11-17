@@ -1,16 +1,8 @@
 /* Card List */
 let cards = [];
-$('.deck .card').each(function (e) {
+$('.deck .card').each(function () {
     cards.push(this);
 });
-
-console.log(cards);
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -29,50 +21,92 @@ function shuffle(array) {
 
 
 /* TODO
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ *  + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
+ *  + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+let flippedCardsArr = [];
+
  //Card Event Listener
-$('.card').click(function (e) { 
-    e.preventDefault();
+$('.card').click(function () { 
     showCard(this);
+    toArray(this);
 });
+
+//add card to flipped card array
+function toArray (card) {
+    flippedCardsArr.push(card);
+}
+
+function matchTest(cardsArr) {
+    //test if the cards i element has the same class
+    if ($(cardsArr[0]).children().attr("class") == $(cardsArr[1]).children().attr("class")) {
+        holdCards(cardsArr);
+    } else {
+        //Shakes and hide cards if they do not match
+        cardsArr.forEach(card => {
+            $(card).effect("shake", {}, 500, function() {
+                hideCard(card,function(){});
+            });
+        });
+    }
+}
+
+//Sets cards to the hold class if matched
+function holdCards(cardsArr) {
+    for (const card of cardsArr) {    
+        $(card).effect("bounce", {}, 300, function() {
+            $(card).addClass('match');
+        });
+    }
+}
 
 //Shakes card and shows image
 function showCard(card) {
+    if($(card).attr("class") == "card open show") {return;}
     $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
         $(card).addClass('open show');
-        $(card).toggle("clip", {direction: "horizontal"}, 100);
+        $(card).toggle("clip", {direction: "horizontal"}, 100, function () {
+            //tests if there are two cards after they are visible
+            if (flippedCardsArr.length == 2) {
+                matchTest(flippedCardsArr)
+                flippedCardsArr.splice(0,2);
+            }
+        });
     });
-
-    //TODO: Add to array of flipped cards
 }
 
-function hideCard(card) {
-    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
-        $(card).removeClass('open show');
-        $(card).toggle("clip", {direction: "horizontal"}, 100);
-    });
 
-    //TODO: Clear array of flipped cards
+function hideCard(card, func) {
+    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
+        $(card).removeClass('open show match');
+        $(card).toggle("clip", {direction: "horizontal"}, 100, function (){
+            //exits if sec param is not a function
+            if(typeof func != "function") { return; }
+            func();
+        });
+    });
 }
 
 /* Restart Game when Restart Button Pressed */
-$('.restart').click(function (e) {
+$('.restart').click(function () {
+    Restart();
+});
+
+function Restart() {
     let classArr = cards.map(x => $(x).find("i").attr("class"));
-
+    
     shuffle(classArr);
-
+    
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i];
-        $(card).attr("class", "card");
-        $(card).find('i').attr("class", classArr[i]);
+        if($(card).attr("class") == "card open show match") {
+            hideCard(card, function () {
+                $(card).find('i').attr("class", classArr[i]); 
+            }); 
+        } else {
+            $(card).find('i').attr("class", classArr[i]);
+        }
     }
-});
+}
+Restart();
