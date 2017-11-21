@@ -1,0 +1,23 @@
+{
+  "name": "memory-game",
+  "version": "1.0.0",
+  "description": "## Table of Contents",
+  "main": "js/app.js",
+  "scripts": {
+    "build": "babel js/ -d js-es5/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HTMLJake/fend-project-memory-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HTMLJake/fend-project-memory-game/issues"
+  },
+  "homepage": "https://github.com/HTMLJake/fend-project-memory-game#readme",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
