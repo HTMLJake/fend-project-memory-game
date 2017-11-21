@@ -55,10 +55,11 @@ function matchTest(cardsArr) {
         });
     }
 
-    updateMoveIndex(++moveIndex);
+    updateMoveIndex(moveIndex + 1);
 }
 
 function updateMoveIndex(num) {
+    moveIndex = num;
     $('.moves').text(num);
 }
 
