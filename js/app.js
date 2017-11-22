@@ -61,11 +61,31 @@ function updateMoveIndex(num) {
     $('.moves').text(num);
 }
 
+let result = false;
+
+var isVictory = function () {
+    let i = 0;
+    cards.forEach(card => {
+        if ($(card).attr("class").includes("match")) {
+            i++;
+            if (i == cards.length) {
+                result = true;
+            } else {
+                result = false;
+            }
+        }
+    });
+    console.log(result);
+    return result;
+};
+
 //Sets cards to the hold class if matched
 function holdCards(cardsArr) {
     for (const card of cardsArr) {    
         $(card).effect("bounce", {}, 300, function() {
             $(card).addClass('match');
+            //$(card).removeClass('open show');
+            isVictory();
         });
     }
 }
