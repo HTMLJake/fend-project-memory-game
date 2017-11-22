@@ -2,15 +2,24 @@
 let cards = [];
 let flippedCardsArr = [];
 let moveIndex = 0;
+let victoryResult = false;
+const cardFlipSpeed = 50;
 
-
+//creates array of card objects
 $('.deck .card').each(function () {
     cards.push(this);
 });
 
+//Card Event Listener
+$('.card').click(function () {
+    showCard(this);
+    toArray(this);
+});
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    var currentIndex = array.length,
+        temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -25,19 +34,37 @@ function shuffle(array) {
 
 
 /* TODO
- *  + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *  + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- //Card Event Listener
-$('.card').click(function () { 
-    showCard(this);
-    toArray(this);
-});
-
 //add card to flipped card array
-function toArray (card) {
+function toArray(card) {
     flippedCardsArr.push(card);
+}
+//Shows results on Victory
+function showResults() {
+    setTimeout(function () {
+        toggleDeckVisability();
+    }, 1000);
+}
+
+//tests if there are two cards. Use after they are visible
+function hasTwoCards() {
+    if (flippedCardsArr.length == 2) {
+        matchTest(flippedCardsArr)
+        flippedCardsArr.length = 0;
+    }
+}
+
+//Hides the deck
+function toggleDeckVisability() {
+    $(".deck").toggle("puff");
+}
+
+//Increases moves and updates display
+function updateMoveIndex(num) {
+    moveIndex = num;
+    $('.moves').text(num);
 }
 
 function matchTest(cardsArr) {
@@ -47,72 +74,76 @@ function matchTest(cardsArr) {
     } else {
         //Shakes and hide cards if they do not match
         cardsArr.forEach(card => {
-            $(card).effect("shake", {}, 500, function() {
-                hideCard(card,function(){});
+            $(card).effect("shake", {}, 500, function () {
+                hideCard(card, function () {});
             });
         });
     }
-
     updateMoveIndex(moveIndex + 1);
 }
 
-function updateMoveIndex(num) {
-    moveIndex = num;
-    $('.moves').text(num);
-}
-
-let result = false;
-
+//If every card is set to match then victory condition is met
 var isVictory = function () {
     let i = 0;
     cards.forEach(card => {
         if ($(card).attr("class").includes("match")) {
             i++;
             if (i == cards.length) {
-                result = true;
+                victoryResult = true;
             } else {
-                result = false;
+                victoryResult = false;
             }
         }
     });
-    console.log(result);
-    return result;
+    console.log(victoryResult);
+    return victoryResult;
 };
+
 
 //Sets cards to the hold class if matched
 function holdCards(cardsArr) {
-    for (const card of cardsArr) {    
-        $(card).effect("bounce", {}, 300, function() {
+    for (const card of cardsArr) {
+        $(card).effect("bounce", {}, 300, function () {
             $(card).addClass('match');
             //$(card).removeClass('open show');
-            isVictory();
+            if (isVictory()) {
+                showResults();
+            }
         });
     }
 }
 
 //Shakes card and shows image
 function showCard(card) {
-    if($(card).attr("class") == "card open show") {return;}
-    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
+    if ($(card).attr("class").includes("match")) {
+        return;
+    }
+    $(card).toggle("clip", {
+        direction: "horizontal"
+    }, cardFlipSpeed, function () {
         $(card).addClass('open show');
-        $(card).toggle("clip", {direction: "horizontal"}, 100, function () {
-            //tests if there are two cards after they are visible
-            if (flippedCardsArr.length == 2) {
-                matchTest(flippedCardsArr)
-                flippedCardsArr.splice(0,2);
-            }
+        $(card).toggle("clip", {
+            direction: "horizontal"
+        }, cardFlipSpeed, function () {
+            hasTwoCards();
         });
     });
 }
 
 
 function hideCard(card, func) {
-    $(card).toggle("clip", {direction: "horizontal"}, 100, function() {
+    $(card).toggle("clip", {
+        direction: "horizontal"
+    }, cardFlipSpeed, function () {
         $(card).removeClass('open show match');
-        $(card).toggle("clip", {direction: "horizontal"}, 100, function (){
-            //exits if sec param is not a function
-            if(typeof func != "function") { return; }
-            func();
+        $(card).toggle("clip", {
+            direction: "horizontal"
+        }, cardFlipSpeed, function () {
+            //Test if second parameter is a function
+            if (typeof func == "function") {
+                //runs input function
+                func();
+            }
         });
     });
 }
@@ -123,20 +154,27 @@ $('.restart').click(function () {
 });
 
 function Restart() {
+    //set moves to 0
     updateMoveIndex(0);
+    //get array of icon classes
     let classArr = cards.map(x => $(x).find("i").attr("class"));
-    
+    //shuffle classes array
     shuffle(classArr);
-    
+    //set new classes from shuffle
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i];
-        if($(card).attr("class") == "card open show match") {
+        //test if card is currently set face up
+        if ($(card).attr("class").includes("match")) {
+            //hide face up cards
             hideCard(card, function () {
-                $(card).find('i').attr("class", classArr[i]); 
-            }); 
+                //then apply new class
+                $(card).find('i').attr("class", classArr[i]);
+            });
         } else {
+            //apply new class to cards already face down
             $(card).find('i').attr("class", classArr[i]);
         }
     }
 }
+//run restart function when site loads
 Restart();

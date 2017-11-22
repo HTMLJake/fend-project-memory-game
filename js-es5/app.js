@@ -4,9 +4,17 @@
 var cards = [];
 var flippedCardsArr = [];
 var moveIndex = 0;
+var victoryResult = false;
 
+//creates array of card objects
 $('.deck .card').each(function () {
     cards.push(this);
+});
+
+//Card Event Listener
+$('.card').click(function () {
+    showCard(this);
+    toArray(this);
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -27,19 +35,35 @@ function shuffle(array) {
 }
 
 /* TODO
- *  + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *  + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
-//Card Event Listener
-$('.card').click(function () {
-    showCard(this);
-    toArray(this);
-});
 
 //add card to flipped card array
 function toArray(card) {
     flippedCardsArr.push(card);
+}
+//Shows results on Victory
+function showResults() {
+    toggleDeckVisability();
+}
+
+//tests if there are two cards. Use after they are visible
+function hasTwoCards() {
+    if (flippedCardsArr.length == 2) {
+        matchTest(flippedCardsArr);
+        flippedCardsArr.length = 0;
+    }
+}
+
+//Hides the deck
+function toggleDeckVisability() {
+    $(".deck").toggle();
+}
+
+//Increases moves and updates display
+function updateMoveIndex(num) {
+    moveIndex = num;
+    $('.moves').text(num);
 }
 
 function matchTest(cardsArr) {
@@ -54,20 +78,35 @@ function matchTest(cardsArr) {
             });
         });
     }
-
     updateMoveIndex(moveIndex + 1);
 }
 
-function updateMoveIndex(num) {
-    moveIndex = num;
-    $('.moves').text(num);
-}
+//If every card is set to match then victory condition is met
+var isVictory = function isVictory() {
+    var i = 0;
+    cards.forEach(function (card) {
+        if ($(card).attr("class").includes("match")) {
+            i++;
+            if (i == cards.length) {
+                victoryResult = true;
+            } else {
+                victoryResult = false;
+            }
+        }
+    });
+    console.log(victoryResult);
+    return victoryResult;
+};
 
 //Sets cards to the hold class if matched
 function holdCards(cardsArr) {
     var _loop = function _loop(card) {
         $(card).effect("bounce", {}, 300, function () {
             $(card).addClass('match');
+            //$(card).removeClass('open show');
+            if (isVictory()) {
+                showResults();
+            }
         });
     };
 
@@ -99,25 +138,29 @@ function holdCards(cardsArr) {
 
 //Shakes card and shows image
 function showCard(card) {
-    if ($(card).attr("class") == "card open show") {
+    if ($(card).attr("class").includes("match")) {
         return;
     }
-    $(card).toggle("clip", { direction: "horizontal" }, 100, function () {
+    $(card).toggle("clip", {
+        direction: "horizontal"
+    }, 100, function () {
         $(card).addClass('open show');
-        $(card).toggle("clip", { direction: "horizontal" }, 100, function () {
-            //tests if there are two cards after they are visible
-            if (flippedCardsArr.length == 2) {
-                matchTest(flippedCardsArr);
-                flippedCardsArr.splice(0, 2);
-            }
+        $(card).toggle("clip", {
+            direction: "horizontal"
+        }, 100, function () {
+            hasTwoCards();
         });
     });
 }
 
 function hideCard(card, func) {
-    $(card).toggle("clip", { direction: "horizontal" }, 100, function () {
+    $(card).toggle("clip", {
+        direction: "horizontal"
+    }, 100, function () {
         $(card).removeClass('open show match');
-        $(card).toggle("clip", { direction: "horizontal" }, 100, function () {
+        $(card).toggle("clip", {
+            direction: "horizontal"
+        }, 100, function () {
             //exits if sec param is not a function
             if (typeof func != "function") {
                 return;
@@ -142,7 +185,7 @@ function Restart() {
 
     var _loop2 = function _loop2(i) {
         var card = cards[i];
-        if ($(card).attr("class") == "card open show match") {
+        if ($(card).attr("class").includes("match")) {
             hideCard(card, function () {
                 $(card).find('i').attr("class", classArr[i]);
             });
