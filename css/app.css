@@ -107,3 +107,23 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.result-panel {
+    display: none;
+}
+
+button {
+    color: #fff;
+    background-color: #02ccba;
+    border: none;
+    padding: 15%;
+    margin: 5%;
+}
+
+button:hover {
+    background-color: #00ad9c;
+}
+
+button:active {
+    background-color: #007468;
+}

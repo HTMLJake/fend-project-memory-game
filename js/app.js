@@ -16,6 +16,12 @@ $('.card').click(function () {
     toArray(this);
 });
 
+$('.start-over').click(function () {
+    toggleDeckVisability();
+    $(".result-panel").hide();
+    Restart();
+});
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length,
@@ -45,6 +51,7 @@ function toArray(card) {
 function showResults() {
     setTimeout(function () {
         toggleDeckVisability();
+        $('.result-panel').show();
     }, 1000);
 }
 
@@ -58,7 +65,7 @@ function hasTwoCards() {
 
 //Hides the deck
 function toggleDeckVisability() {
-    $(".deck").toggle("puff");
+    $(".deck").toggle("fade");
 }
 
 //Increases moves and updates display
