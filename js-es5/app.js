@@ -5,6 +5,7 @@ var cards = [];
 var flippedCardsArr = [];
 var moveIndex = 0;
 var victoryResult = false;
+var cardFlipSpeed = 50;
 
 //creates array of card objects
 $('.deck .card').each(function () {
@@ -15,6 +16,12 @@ $('.deck .card').each(function () {
 $('.card').click(function () {
     showCard(this);
     toArray(this);
+});
+
+$('.start-over').click(function () {
+    toggleDeckVisability();
+    $(".result-panel").hide();
+    Restart();
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -44,7 +51,10 @@ function toArray(card) {
 }
 //Shows results on Victory
 function showResults() {
-    toggleDeckVisability();
+    setTimeout(function () {
+        toggleDeckVisability();
+        $('.result-panel').show();
+    }, 1000);
 }
 
 //tests if there are two cards. Use after they are visible
@@ -57,7 +67,7 @@ function hasTwoCards() {
 
 //Hides the deck
 function toggleDeckVisability() {
-    $(".deck").toggle();
+    $(".deck").toggle("fade");
 }
 
 //Increases moves and updates display
@@ -143,11 +153,11 @@ function showCard(card) {
     }
     $(card).toggle("clip", {
         direction: "horizontal"
-    }, 100, function () {
+    }, cardFlipSpeed, function () {
         $(card).addClass('open show');
         $(card).toggle("clip", {
             direction: "horizontal"
-        }, 100, function () {
+        }, cardFlipSpeed, function () {
             hasTwoCards();
         });
     });
@@ -156,16 +166,16 @@ function showCard(card) {
 function hideCard(card, func) {
     $(card).toggle("clip", {
         direction: "horizontal"
-    }, 100, function () {
+    }, cardFlipSpeed, function () {
         $(card).removeClass('open show match');
         $(card).toggle("clip", {
             direction: "horizontal"
-        }, 100, function () {
-            //exits if sec param is not a function
-            if (typeof func != "function") {
-                return;
+        }, cardFlipSpeed, function () {
+            //Test if second parameter is a function
+            if (typeof func == "function") {
+                //runs input function
+                func();
             }
-            func();
         });
     });
 }
@@ -176,20 +186,27 @@ $('.restart').click(function () {
 });
 
 function Restart() {
+    //set moves to 0
     updateMoveIndex(0);
+    //get array of icon classes
     var classArr = cards.map(function (x) {
         return $(x).find("i").attr("class");
     });
-
+    //shuffle classes array
     shuffle(classArr);
+    //set new classes from shuffle
 
     var _loop2 = function _loop2(i) {
         var card = cards[i];
+        //test if card is currently set face up
         if ($(card).attr("class").includes("match")) {
+            //hide face up cards
             hideCard(card, function () {
+                //then apply new class
                 $(card).find('i').attr("class", classArr[i]);
             });
         } else {
+            //apply new class to cards already face down
             $(card).find('i').attr("class", classArr[i]);
         }
     };
@@ -198,4 +215,5 @@ function Restart() {
         _loop2(i);
     }
 }
+//run restart function when site loads
 Restart();
