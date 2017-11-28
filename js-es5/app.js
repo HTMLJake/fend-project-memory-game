@@ -93,9 +93,11 @@ function shuffle(array) {
 //add card to flipped card array
 function toArray(card) {
     var result = false;
-    if (flippedCardsArr[0] !== card || flippedCardsArr[0] === null) {
-        flippedCardsArr.push(card);
-        result = true;
+    if (!$(card).attr("class").includes("match")) {
+        if (flippedCardsArr[0] !== card || flippedCardsArr[0] === null) {
+            flippedCardsArr.push(card);
+            result = true;
+        }
     }
     return result;
 }
@@ -235,9 +237,6 @@ function holdCards(cardsArr) {
 
 //Shakes card and shows image
 function showCard(card) {
-    if ($(card).attr("class").includes("match")) {
-        return;
-    }
     $(card).toggle("clip", {
         direction: "horizontal"
     }, cardFlipSpeed, function () {
@@ -245,6 +244,7 @@ function showCard(card) {
         $(card).toggle("clip", {
             direction: "horizontal"
         }, cardFlipSpeed, function () {
+            //Checking if there are two cards in the array once the animation is complete
             hasTwoCards();
         });
     });
