@@ -31,6 +31,9 @@ body {
 h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+    text-align: center;
+    /* font-size: 3vw; */
+    text-transform: uppercase;
 }
 
 /*
@@ -108,16 +111,27 @@ h1 {
     cursor: pointer;
 }
 
+.results {
+    width: 100%;
+}
+
 .result-panel {
+    display: flex;
     display: none;
+    align-content: center;
+    align-items: center;
+    align-self:  center;
+    text-align: center;
+    width: 500px;
+    height: 100vh;
 }
 
 button {
     color: #fff;
     background-color: #02ccba;
     border: none;
-    padding: 15%;
-    margin: 5%;
+    padding: 10px 25px;
+    margin: 20px;
 }
 
 button:hover {

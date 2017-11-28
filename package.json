@@ -4,7 +4,7 @@
   "description": "## Table of Contents",
   "main": "js/app.js",
   "scripts": {
-    "build": "babel js/ -d js-es5/"
+    "build": "babel js/ -w -d js-es5/"
   },
   "repository": {
     "type": "git",

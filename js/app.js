@@ -1,19 +1,27 @@
 /* Card List */
-let cards = [];
+let cardsArr = [];
 let flippedCardsArr = [];
-let moveIndex = 0;
+let starsArr = [];
+
 let victoryResult = false;
+
+let moveIndex = 0;
 const cardFlipSpeed = 50;
 
 //creates array of card objects
 $('.deck .card').each(function () {
-    cards.push(this);
+    cardsArr.push(this);
 });
+
+$('.stars').children().each(function () {
+    starsArr.push($(this).children());
+})
 
 //Card Event Listener
 $('.card').click(function () {
-    showCard(this);
-    toArray(this);
+    if (toArray(this)) {
+        showCard(this);
+    }
 });
 
 $('.start-over').click(function () {
@@ -45,7 +53,12 @@ function shuffle(array) {
 
 //add card to flipped card array
 function toArray(card) {
-    flippedCardsArr.push(card);
+    let result = false;
+    if (flippedCardsArr[0] !== card || flippedCardsArr[0] === null) {
+        flippedCardsArr.push(card);
+        result = true;
+    }
+    return result;
 }
 //Shows results on Victory
 function showResults() {
@@ -55,23 +68,54 @@ function showResults() {
     }, 1000);
 }
 
-//tests if there are two cards. Use after they are visible
+//tests if there are two cards. Use this function after the cards are visible
 function hasTwoCards() {
     if (flippedCardsArr.length == 2) {
-        matchTest(flippedCardsArr)
+        matchTest(flippedCardsArr);
         flippedCardsArr.length = 0;
     }
 }
 
 //Hides the deck
 function toggleDeckVisability() {
-    $(".deck").toggle("fade");
+    if (isVictory()) {
+        $("#game-panel").hide();
+    } else {
+        $("#game-panel").show();
+    }
 }
 
 //Increases moves and updates display
 function updateMoveIndex(num) {
     moveIndex = num;
     $('.moves').text(num);
+    updateScore(num);
+}
+
+function updateScore(num) {
+    if (num === 0) {
+        console.log("Reset?");
+    }
+    if (num < 20) {
+        setStars(3);
+    } else if (num >= 20 && num < 30) {
+        //score is 2 stars
+        setStars(2);
+    } else {
+        //score is 1 star
+        setStars(1);
+    }
+}
+
+function setStars(starAmount) {
+    for (let i = 0; i < starsArr.length; i++) {
+
+        if (i < starAmount) {
+            $(starsArr[i]).attr("class", "fa fa-star");
+        } else {
+            $(starsArr[i]).attr("class", "fa fa-star-o");
+        }
+    }
 }
 
 function matchTest(cardsArr) {
@@ -92,17 +136,19 @@ function matchTest(cardsArr) {
 //If every card is set to match then victory condition is met
 var isVictory = function () {
     let i = 0;
-    cards.forEach(card => {
+    cardsArr.forEach(card => {
         if ($(card).attr("class").includes("match")) {
             i++;
-            if (i == cards.length) {
+            if (i == cardsArr.length) {
                 victoryResult = true;
             } else {
                 victoryResult = false;
             }
+        } else {
+            victoryResult = false;
         }
+
     });
-    console.log(victoryResult);
     return victoryResult;
 };
 
@@ -164,12 +210,12 @@ function Restart() {
     //set moves to 0
     updateMoveIndex(0);
     //get array of icon classes
-    let classArr = cards.map(x => $(x).find("i").attr("class"));
+    let classArr = cardsArr.map(x => $(x).find("i").attr("class"));
     //shuffle classes array
     shuffle(classArr);
     //set new classes from shuffle
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i];
+    for (let i = 0; i < cardsArr.length; i++) {
+        const card = cardsArr[i];
         //test if card is currently set face up
         if ($(card).attr("class").includes("match")) {
             //hide face up cards
