@@ -5,6 +5,7 @@ let secs = '00';
 let mins = '00';
 
 var time;
+var readout;
 
 function startTimer () {
     time = window.setInterval(function(){
@@ -13,7 +14,8 @@ function startTimer () {
             mins = (mins < 10 ? '0' : '') + mins++;
             timer = 0;
         }
-        $('.timer').text(`${mins}:${secs}`);
+        readout = `${mins}:${secs}`;
+        $('.timer').text(readout);
     }, 1000);
 }
 
@@ -23,7 +25,8 @@ function stopTimer() {
 
 function clearTimer() {
     stopTimer();
-    secs = '00' , mins = '00;
+    secs = '00' , mins = '00';
+    readout = `${mins}:${secs}`;
     $('.timer').text(`${mins}:${secs}`);
 }
 
@@ -59,9 +62,9 @@ $('.card').click(function () {
 });
 
 $('.start-over').click(function () {
-    toggleDeckVisability();
     $(".result-panel").hide();
     Restart();
+    toggleDeckVisability();
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -97,9 +100,12 @@ function toArray(card) {
 //Shows results on Victory
 function showResults() {
     setTimeout(function () {
+        $('.moves').text(moveIndex);
+        $('.score').html($('.stars').html());
+        $('.finalTime').text(readout);
         toggleDeckVisability();
         $('.result-panel').show();
-    }, 1000);
+    }, 2000);
 }
 
 //tests if there are two cards. Use this function after the cards are visible
@@ -112,11 +118,13 @@ function hasTwoCards() {
 
 //Hides the deck
 function toggleDeckVisability() {
-    if (isVictory()) {
+    $("#game-panel").toggle();
+
+    /* if (isVictory()) {
         $("#game-panel").hide();
     } else {
         $("#game-panel").show();
-    }
+    } */
 }
 
 //Increases moves and updates display
@@ -193,6 +201,7 @@ function holdCards(cardsArr) {
             $(card).addClass('match');
             //$(card).removeClass('open show');
             if (isVictory()) {
+                stopTimer();
                 showResults();
             }
         });
@@ -237,13 +246,13 @@ function hideCard(card, func) {
 /* Restart Game when Restart Button Pressed */
 $('.restart').click(function () {
     Restart();
-    clearTimer();
-    isStart = false;
 });
 
 function Restart() {
     //set moves to 0
+    clearTimer();
     updateMoveIndex(0);
+    isStart = false;
     //get array of icon classes
     let classArr = cardsArr.map(x => $(x).find("i").attr("class"));
     //shuffle classes array
