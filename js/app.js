@@ -1,9 +1,39 @@
+/* Timer (not acurate, can be affected by lag) */
+let timer = 0;
+
+let secs = '00';
+let mins = '00';
+
+var time;
+
+function startTimer () {
+    time = window.setInterval(function(){
+        secs = (timer < 10 ? '0' : '') + timer++;
+        if(timer == 60) {
+            mins = (mins < 10 ? '0' : '') + mins++;
+            timer = 0;
+        }
+        $('.timer').text(`${mins}:${secs}`);
+    }, 1000);
+}
+
+function stopTimer() {
+    window.clearInterval(time);
+}
+
+function clearTimer() {
+    stopTimer();
+    secs = '00' , mins = '00;
+    $('.timer').text(`${mins}:${secs}`);
+}
+
 /* Card List */
 let cardsArr = [];
 let flippedCardsArr = [];
 let starsArr = [];
 
 let victoryResult = false;
+let isStart = false;
 
 let moveIndex = 0;
 const cardFlipSpeed = 50;
@@ -19,6 +49,10 @@ $('.stars').children().each(function () {
 
 //Card Event Listener
 $('.card').click(function () {
+    if (!isStart) {
+        isStart = true;
+        startTimer();
+    }
     if (toArray(this)) {
         showCard(this);
     }
@@ -93,10 +127,8 @@ function updateMoveIndex(num) {
 }
 
 function updateScore(num) {
-    if (num === 0) {
-        console.log("Reset?");
-    }
     if (num < 20) {
+        //score is 3 stars
         setStars(3);
     } else if (num >= 20 && num < 30) {
         //score is 2 stars
@@ -132,8 +164,9 @@ function matchTest(cardsArr) {
     }
     updateMoveIndex(moveIndex + 1);
 }
-
-//If every card is set to match then victory condition is met
+//
+//If every card is set to match then victory condition is met and returns bool
+//
 var isVictory = function () {
     let i = 0;
     cardsArr.forEach(card => {
@@ -204,6 +237,8 @@ function hideCard(card, func) {
 /* Restart Game when Restart Button Pressed */
 $('.restart').click(function () {
     Restart();
+    clearTimer();
+    isStart = false;
 });
 
 function Restart() {

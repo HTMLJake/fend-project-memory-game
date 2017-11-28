@@ -35,6 +35,10 @@ h1 {
     /* font-size: 3vw; */
     text-transform: uppercase;
 }
+.timer {
+    margin-left: 15%;
+}
+
 
 /*
  * Styles for the deck of cards
