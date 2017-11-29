@@ -30,6 +30,7 @@ function stopTimer() {
 
 function clearTimer() {
     stopTimer();
+    timer = 0;
     secs = '00', mins = '00';
     readout = `${mins}:${secs}`;
     $('.timer').text(`${mins}:${secs}`);
@@ -76,9 +77,9 @@ $('.card').click(function () {
 $('.start-over').click(function () {
     $(".result-panel").hide();
     Restart();
-    setTimeout(function() {
+    setTimeout(function () {
         setDeckVisability();
-    },100);
+    }, 100);
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -131,7 +132,6 @@ function hasTwoCards() {
 //toggle the visability of the game board
 function setDeckVisability() {
     $('#game-panel').toggle();
-
 }
 
 //Sets moves and updates display
@@ -256,6 +256,7 @@ function Restart() {
     clearTimer();
     updateMoveIndex(0);
     isStart = false;
+    flippedCardsArr.length = 0;
     //get array of icon classes
     let classArr = cardsArr.map(x => $(x).find("i").attr("class"));
     //shuffle classes array
@@ -264,7 +265,7 @@ function Restart() {
     for (let i = 0; i < cardsArr.length; i++) {
         const card = cardsArr[i];
         //test if card is currently set face up
-        if ($(card).attr("class").includes("match")) {
+        if ($(card).attr("class").includes("match") || $(card).attr("class").includes("open")) {
             //hide face up cards
             hideCard(card, function () {
                 //then apply new class

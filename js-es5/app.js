@@ -32,6 +32,7 @@ function stopTimer() {
 
 function clearTimer() {
     stopTimer();
+    timer = 0;
     secs = '00', mins = '00';
     readout = mins + ':' + secs;
     $('.timer').text(mins + ':' + secs);
@@ -281,6 +282,7 @@ function Restart() {
     clearTimer();
     updateMoveIndex(0);
     isStart = false;
+    flippedCardsArr.length = 0;
     //get array of icon classes
     var classArr = cardsArr.map(function (x) {
         return $(x).find("i").attr("class");
@@ -292,7 +294,7 @@ function Restart() {
     var _loop2 = function _loop2(i) {
         var card = cardsArr[i];
         //test if card is currently set face up
-        if ($(card).attr("class").includes("match")) {
+        if ($(card).attr("class").includes("match") || $(card).attr("class").includes("open")) {
             //hide face up cards
             hideCard(card, function () {
                 //then apply new class
