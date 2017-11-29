@@ -9,13 +9,18 @@ var mins = '00';
 var time;
 var readout;
 
+/* TODO: Could increase accuracy by checking against date at shorter intervals instead of increasing every 1000 ms which can be slowed by system lag */
+
 function startTimer() {
     time = window.setInterval(function () {
+        //if secs is less than 10 add a 0 before
         secs = (timer < 10 ? '0' : '') + timer++;
+        //add 1 minute when secs reaches 60 and reset secs
         if (timer == 60) {
             mins = (mins < 10 ? '0' : '') + mins++;
             timer = 0;
         }
+        //put time into readout varaible to access globaly
         readout = mins + ':' + secs;
         $('.timer').text(readout);
     }, 1000);
@@ -35,11 +40,14 @@ function clearTimer() {
 /* Card List */
 var cardsArr = [];
 var flippedCardsArr = [];
+/* Star List */
 var starsArr = [];
 
+/* Booleans */
 var victoryResult = false;
 var isStart = false;
 
+/* Integers */
 var moveIndex = 0;
 var cardFlipSpeed = 50;
 
@@ -48,25 +56,31 @@ $('.deck .card').each(function () {
     cardsArr.push(this);
 });
 
+//creates array of stars
 $('.stars').children().each(function () {
     starsArr.push($(this).children());
 });
 
 //Card Event Listener
 $('.card').click(function () {
+    //start the timer when you click on a card for the first time
     if (!isStart) {
         isStart = true;
         startTimer();
     }
+    //tries to add card to array and if successful then show card
     if (toArray(this)) {
         showCard(this);
     }
 });
 
+/* Restart game when button is clicked and hide vitory screen */
 $('.start-over').click(function () {
     $(".result-panel").hide();
     Restart();
-    toggleDeckVisability();
+    setTimeout(function () {
+        setDeckVisability();
+    }, 100);
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -86,11 +100,7 @@ function shuffle(array) {
     return array;
 }
 
-/* TODO
- *  + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
-
-//add card to flipped card array
+//add card to flipped card array if it is not the same card or already matched
 function toArray(card) {
     var result = false;
     if (!$(card).attr("class").includes("match")) {
@@ -103,11 +113,12 @@ function toArray(card) {
 }
 //Shows results on Victory
 function showResults() {
+    //Waits 2 secs before showing victory screen
     setTimeout(function () {
         $('.moves').text(moveIndex);
         $('.score').html($('.stars').html());
         $('.finalTime').text(readout);
-        toggleDeckVisability();
+        setDeckVisability();
         $('.result-panel').show();
     }, 2000);
 }
@@ -120,18 +131,12 @@ function hasTwoCards() {
     }
 }
 
-//Hides the deck
-function toggleDeckVisability() {
-    $("#game-panel").toggle();
-
-    /* if (isVictory()) {
-        $("#game-panel").hide();
-    } else {
-        $("#game-panel").show();
-    } */
+//toggle the visability of the game board
+function setDeckVisability() {
+    $('#game-panel').toggle();
 }
 
-//Increases moves and updates display
+//Sets moves and updates display
 function updateMoveIndex(num) {
     moveIndex = num;
     $('.moves').text(num);
@@ -151,9 +156,9 @@ function updateScore(num) {
     }
 }
 
+/* Loops through each star and changes how many are filled based on input */
 function setStars(starAmount) {
     for (var i = 0; i < starsArr.length; i++) {
-
         if (i < starAmount) {
             $(starsArr[i]).attr("class", "fa fa-star");
         } else {
@@ -176,9 +181,8 @@ function matchTest(cardsArr) {
     }
     updateMoveIndex(moveIndex + 1);
 }
-//
+
 //If every card is set to match then victory condition is met and returns bool
-//
 var isVictory = function isVictory() {
     var i = 0;
     cardsArr.forEach(function (card) {
