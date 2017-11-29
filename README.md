@@ -5,16 +5,10 @@
 * [Instructions](#instructions)
 * [Contributing](#contributing)
 
-## Instructions
+## About
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+This project is based on code for the [Udacity Memory Project](https://github.com/udacity/fend-project-memory-game) for the front-end web design course. This fork is my version of the game done for the class.
 
 ## Contributing
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+I used [Babel](https://babeljs.io/) to make this project work on older browsers so make sure to run `npm install` to download the dependancies. Then run `npm run build` to run babel. To make changes to the code open the `js/app.js` file. It will automatically run everytime you save. If you do not want to use babel you can either change the html to use the `js/app.js` file or edit the js-es5/app.js file. Also any javascript file in the `js/` directory will be transpilled to the js-es5 directory.
