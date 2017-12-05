@@ -81,11 +81,11 @@ $('.card').click(function () {
 
 /* Restart game when button is clicked and hide vitory screen */
 $('.start-over').click(function () {
-    $(".result-panel").hide();
+    $(".result-panel").dialog("close");
     Restart();
-    setTimeout(function () {
-        setDeckVisability();
-    }, 100);
+    /*     setTimeout(function () {
+            setDeckVisability();
+        }, 100); */
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -123,9 +123,16 @@ function showResults() {
         $('.moves').text(moveIndex);
         $('.score').html($('.stars').html());
         $('.finalTime').text(readout);
-        setDeckVisability();
-        $('.result-panel').show();
-    }, 2000);
+        //setDeckVisability();
+        $('.result-panel').dialog({
+            show: { effect: "blind", duration: 800 },
+            width: "90vw",
+            height: "90vh",
+            my: "center",
+            at: "center",
+            of: window
+        });
+    }, 500);
 }
 
 //tests if there are two cards. Use this function after the cards are visible
@@ -138,10 +145,10 @@ function hasTwoCards() {
     }
 }
 
-//toggle the visability of the game board
+/* //toggle the visability of the game board
 function setDeckVisability() {
     $('#game-panel').toggle();
-}
+} */
 
 //Sets moves and updates display
 function updateMoveIndex(num) {

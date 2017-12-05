@@ -35,17 +35,18 @@ h1 {
     /* font-size: 3vw; */
     text-transform: uppercase;
 }
+/* 
 .timer {
     margin-left: 15%;
 }
-
+ */
 
 /*
  * Styles for the deck of cards
  */
 
 .deck {
-    width: 660px;
+    width: 35%;
     min-height: 680px;
     background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
     padding: 32px;
@@ -71,6 +72,46 @@ h1 {
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
+@media (max-width: 1650px) {
+    .deck .card {
+        height: 10vw;
+        width: 10vw;
+}
+
+    .deck {
+        min-height: 700px;
+        width: 50%;
+        padding: 5px;
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 680px) {
+    .deck .card {
+        height: 20vw;
+        width: 20vw;
+}
+
+    .deck {
+        min-height: 600px;
+        width: 95%;
+        padding: 5px;
+        justify-content: space-around;
+    }
+}
+@media (max-width: 450px) {
+    .deck .card {
+        height: 20vw;
+        width: 20vw;
+}
+
+    .deck {
+        min-height: 400px;
+        width: 95%;
+        padding: 5px;
+        justify-content: space-around;
+    }
+}
 
 .deck .card.open {
     transform: rotateY(0);
@@ -93,9 +134,16 @@ h1 {
  */
 
 .score-panel {
+    display: flex;
     text-align: left;
-    width: 345px;
+    width: 25%;
     margin-bottom: 10px;
+    justify-content: space-between;
+}
+@media (max-width: 680px) {
+    .score-panel {
+        width: 90%;
+    }
 }
 
 .score-panel .stars {
@@ -125,14 +173,10 @@ li {
 }
 
 .result-panel {
-    display: flex;
     display: none;
-    align-content: center;
+    background-color: #f1f1f1;
     align-items: center;
-    align-self:  center;
     text-align: center;
-    width: 500px;
-    height: 100vh;
 }
 
 button {
@@ -149,4 +193,26 @@ button:hover {
 
 button:active {
     background-color: #007468;
+}
+
+
+.ui-dialog {
+    display: flex;
+    flex-flow: column-reverse;
+}
+
+.ui-dialog-content {
+    display: inherit;
+    justify-content: space-around;
+    align-content: center;
+}
+
+
+#ui-id-1 { 
+    display: inherit !important;
+    height: 100vh !important;
+}
+
+.ui-dialog-titlebar-close {
+    display: none;
 }
