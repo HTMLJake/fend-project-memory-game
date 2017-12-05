@@ -81,9 +81,6 @@ $('.card').click(function () {
 $('.start-over').click(function () {
     $(".result-panel").dialog("close");
     Restart();
-/*     setTimeout(function () {
-        setDeckVisability();
-    }, 100); */
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -120,15 +117,12 @@ function showResults() {
         $('.moves').text(moveIndex);
         $('.score').html($('.stars').html());
         $('.finalTime').text(readout);
-        //setDeckVisability();
         $('.result-panel').dialog(
             {
+                modal: true,
                 show: {effect: "blind", duration: 800},
                 width: "90vw",
-                height: "90vh",
-                my: "center", 
-                at: "center", 
-                of: window
+                height: "50vh",
             });
     }, 500);
 }
@@ -143,11 +137,6 @@ function hasTwoCards() {
         canClick = true;
     }
 }
-
-/* //toggle the visability of the game board
-function setDeckVisability() {
-    $('#game-panel').toggle();
-} */
 
 //Sets moves and updates display
 function updateMoveIndex(num) {

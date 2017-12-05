@@ -174,7 +174,7 @@ li {
 
 .result-panel {
     display: none;
-    background-color: #f1f1f1;
+    background-color: #fffd89;
     align-items: center;
     text-align: center;
 }
@@ -210,7 +210,7 @@ button:active {
 
 #ui-id-1 { 
     display: inherit !important;
-    height: 100vh !important;
+    height: 70vh !important;
 }
 
 .ui-dialog-titlebar-close {
