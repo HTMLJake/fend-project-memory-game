@@ -47,6 +47,7 @@ var starsArr = [];
 /* Booleans */
 var victoryResult = false;
 var isStart = false;
+var canClick = true;
 
 /* Integers */
 var moveIndex = 0;
@@ -70,8 +71,11 @@ $('.card').click(function () {
         startTimer();
     }
     //tries to add card to array and if successful then show card
-    if (toArray(this)) {
-        showCard(this);
+    if (canClick) {
+        if (toArray(this)) {
+            canClick = false;
+            showCard(this);
+        }
     }
 });
 
@@ -129,6 +133,8 @@ function hasTwoCards() {
     if (flippedCardsArr.length == 2) {
         matchTest(flippedCardsArr);
         flippedCardsArr.length = 0;
+    } else {
+        canClick = true;
     }
 }
 
@@ -172,11 +178,13 @@ function matchTest(cardsArr) {
     //test if the cards i element has the same class
     if ($(cardsArr[0]).children().attr("class") == $(cardsArr[1]).children().attr("class")) {
         holdCards(cardsArr);
+        canClick = true;
     } else {
         //Shakes and hide cards if they do not match
         cardsArr.forEach(function (card) {
             $(card).effect("shake", {}, 500, function () {
                 hideCard(card, function () {});
+                canClick = true;
             });
         });
     }
