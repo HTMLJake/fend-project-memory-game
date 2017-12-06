@@ -12,10 +12,11 @@ var readout;
 function startTimer() {
     time = window.setInterval(function () {
         //if secs is less than 10 add a 0 before
-        secs = (timer < 10 ? '0' : '') + timer++;
+        secs = (++timer < 10 ? '0' : '') + timer;
         //add 1 minute when secs reaches 60 and reset secs
-        if (timer == 60) {
-            mins = (mins < 10 ? '0' : '') + mins++;
+        if (secs == 60) {
+            secs = '00';
+            mins = ++mins < 10 ? '0' + mins : mins;
             timer = 0;
         }
         //put time into readout varaible to access globaly
